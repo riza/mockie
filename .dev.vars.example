@@ -1,0 +1,3 @@
+# Copy to .dev.vars (gitignored) and pick your own value.
+# In production this is a secret: wrangler secret put ADMIN_TOKEN
+ADMIN_TOKEN=change-me

@@ -1,0 +1,52 @@
+{
+  "name": "mockie",
+  "version": "0.1.0",
+  "description": "Serverless mock API server on Cloudflare Workers, with an admin panel for endpoints and full request inspection.",
+  "private": true,
+  "license": "MIT",
+  "author": "Rıza Sabuncu (https://x.com/rizasabuncu)",
+  "homepage": "https://github.com/riza/mockie#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/riza/mockie.git"
+  },
+  "bugs": {
+    "url": "https://github.com/riza/mockie/issues"
+  },
+  "keywords": [
+    "mock-server",
+    "mock-api",
+    "cloudflare-workers",
+    "serverless",
+    "d1",
+    "api-mocking",
+    "http-mock",
+    "testing"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "dev:ui": "vite",
+    "build": "vite build",
+    "deploy": "npm run build && wrangler deploy",
+    "db:local": "wrangler d1 migrations apply mockie --local",
+    "db:remote": "wrangler d1 migrations apply mockie --remote",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p web/tsconfig.json",
+    "cf-typegen": "wrangler types"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "@vitejs/plugin-react": "^6.1.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.2.2",
+    "wrangler": "^4.126.0"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
+}

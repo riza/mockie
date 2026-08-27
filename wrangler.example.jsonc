@@ -1,0 +1,68 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "mockie",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-01",
+
+  "observability": {
+    "enabled": true
+  },
+
+  // Optional. Without this the Worker is reachable at
+  // mockie.<your-subdomain>.workers.dev, which is enough to use it.
+  //
+  // "routes": [
+  //   // Wrangler creates the DNS record and the binding for a custom domain.
+  //   { "pattern": "mock.example.com", "custom_domain": true },
+  //
+  //   // Per-project subdomains. This must be a plain route - custom_domain
+  //   // does not accept wildcards - and it needs two things wrangler cannot
+  //   // do for you:
+  //   //   1. a PROXIED wildcard DNS record for *.mock on the zone
+  //   //   2. a certificate covering *.mock.example.com. Universal SSL only
+  //   //      covers one label deep, so a second-level wildcard needs
+  //   //      Total TLS / Advanced Certificate Manager.
+  //   { "pattern": "*.mock.example.com/*", "zone_name": "example.com" }
+  // ],
+
+  // Admin SPA (Vite build output). `run_worker_first` is REQUIRED: mock endpoints
+  // live at arbitrary paths, so the Worker must see every request first and only
+  // hand /__admin/* over to the asset server.
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": true
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mockie",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  "kv_namespaces": [
+    {
+      "binding": "CACHE",
+      "id": "REPLACE_WITH_KV_NAMESPACE_ID"
+    }
+  ],
+
+  "vars": {
+    // Set to the base host to also serve each project at
+    // <slug>.<host>/. Empty leaves only /m/<slug>/ routing active.
+    "WILDCARD_HOST": "",
+
+    // Rolling request-log cap per project. Older rows are pruned after each write.
+    "REQUEST_LOG_LIMIT": "2000",
+    // Max stored request/response body size in bytes; larger bodies are truncated.
+    "MAX_BODY_BYTES": "65536"
+  }
+
+  // Secret (do not put in this file):
+  //   wrangler secret put ADMIN_TOKEN
+  // For local dev, put ADMIN_TOKEN in .dev.vars
+}
